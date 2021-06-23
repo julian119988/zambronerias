@@ -7,20 +7,22 @@ const GlobalStyle = createGlobalStyle`
   html,
   body,
   #root {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
     min-height: 100vh;
     font-size: 10px;
 }
+*{
+  box-sizing: border-box;
+}
 `;
 
 ReactDOM.render(
-  <React.StrictMode>
-    <GlobalStyle whiteColor />
-    <App />
-  </React.StrictMode>,
-  document.getElementById("root")
+    <React.StrictMode>
+        <GlobalStyle whiteColor />
+        <App />
+    </React.StrictMode>,
+    document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function

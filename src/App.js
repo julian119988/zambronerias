@@ -4,14 +4,33 @@ import Description from "./Components/Description";
 import Footer from "./Components/Footer";
 import Products from "./Components/Products";
 import Navbar from "./Components/Navbar";
+import { useEffect, useState } from "react";
 
 function App() {
+  const [refs, setRefs] = useState({});
+
+  function getRef(ref) {
+    if (ref.description) {
+      setRefs(() => {
+        let temp = refs;
+        temp.description = ref.description;
+        return temp;
+      });
+    } else if (ref.products) {
+      setRefs(() => {
+        let temp = refs;
+        temp.products = ref.products;
+        return temp;
+      });
+    }
+  }
+
   return (
     <Main>
-      <Navbar />
+      <Navbar refs={refs} />
       <Hero />
-      <Description />
-      <Products />
+      <Description sendRef={getRef} />
+      <Products sendRef={getRef} />
       <Footer />
     </Main>
   );

@@ -14,7 +14,7 @@ export default function Hero(props) {
             },
             { threshold: 0.7 }
         );
-        observer.observe(heroRef.current);
+        observer.observe(heroRef.current); // eslint-disable-next-line
     }, []);
     return (
         <Container ref={heroRef}>

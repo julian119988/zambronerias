@@ -4,11 +4,14 @@ import Description from "./Components/Description";
 import Footer from "./Components/Footer";
 import Products from "./Components/Products";
 import Navbar from "./Components/Navbar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import AdminModal from "./Components/AdminModal";
+import bucketInitialization from "./Config/bucketInitialization";
 
 function App() {
     const [refs, setRefs] = useState({});
     const [navBarState, setNavBarState] = useState(false);
+    const [openAdminModal, setOpenAdminModal] = useState(false);
 
     function getRef(ref) {
         if (ref.description) {
@@ -25,17 +28,23 @@ function App() {
             });
         }
     }
+
     function changeNavbarColor(state) {
         setNavBarState(!state);
+    }
+
+    function changeAdminModal() {
+        setOpenAdminModal(!openAdminModal);
     }
 
     return (
         <Main>
             <Navbar refs={refs} navBarState={navBarState} />
+            <AdminModal openModal={openAdminModal} />
             <Hero changeNavbarColor={changeNavbarColor} />
             <Description sendRef={getRef} />
             <Products sendRef={getRef} />
-            <Footer />
+            <Footer adminModal={changeAdminModal} />
         </Main>
     );
 }

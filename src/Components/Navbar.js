@@ -15,7 +15,9 @@ export default function Navbar(props) {
             <NavTitle>Zambronerias</NavTitle>
             <HamburgerMenu
                 open={menuOpen}
-                onClick={() => setMenuOpen(!menuOpen)}
+                onClick={() => {
+                    setMenuOpen(!menuOpen);
+                }}
             >
                 <Line marginB open={menuOpen} top />
                 <Line open={menuOpen} center />
@@ -56,6 +58,7 @@ const Line = styled.span`
 `;
 
 const NavDiv = styled.nav`
+    height: 12vh;
     background-color: transparent;
     position: fixed;
     z-index: 2;

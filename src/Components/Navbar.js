@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
+import axios from "axios";
 
 export default function Navbar(props) {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -9,6 +10,10 @@ export default function Navbar(props) {
             block: "nearest",
         });
     }
+    async function asd() {
+        const response = await axios.get("http://localhost:8080/asd");
+        console.log(response);
+    }
 
     return (
         <NavDiv navBarState={props.navBarState}>
@@ -17,6 +22,7 @@ export default function Navbar(props) {
                 open={menuOpen}
                 onClick={() => {
                     setMenuOpen(!menuOpen);
+                    asd();
                 }}
             >
                 <Line marginB open={menuOpen} top />

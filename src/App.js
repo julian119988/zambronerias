@@ -6,7 +6,6 @@ import Products from "./Components/Products";
 import Navbar from "./Components/Navbar";
 import { useEffect, useState } from "react";
 import AdminModal from "./Components/AdminModal";
-import bucketInitialization from "./Config/bucketInitialization";
 
 function App() {
     const [refs, setRefs] = useState({});

@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
+import uploadImage from "../Services/uploadImage";
+import axios from "axios";
+
 export default function AdminModal(props) {
     const [isOpen, setIsOpen] = useState(false);
     const [display, setDisplay] = useState(false);
@@ -33,13 +36,33 @@ export default function AdminModal(props) {
             alert("Debe subir una imagen.");
         } else {
             console.log(data); //Subir la imagen A googleCloud y los datos a la Base de datos.
+            sendFile(data.file);
+            console.log(process.env, process.env.REACT_APP_API_URL);
             event.target.reset();
             toggleModal();
             setData({});
         }
     }
+    async function sendFile() {
+        const formData = new FormData();
+        formData.append("title", data.title);
+        formData.append("description", data.description);
+        formData.append("price", data.price);
+        formData.append("file", data.file);
+        const response = await axios.post(
+            "http://localhost:8080/send",
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            }
+        );
+        console.log(response);
+    }
 
     function handleChange() {
+        console.log(inputFileRef.current.files);
         setData({
             title: inputTitleRef.current.value,
             description: inputDescriptionRef.current.value,
@@ -60,7 +83,7 @@ export default function AdminModal(props) {
         <Main show={isOpen} displayH={display} onClick={toggleModal} id="F">
             <Card show={isOpen} displayH={display}>
                 <Title>Nuevo post</Title>
-                <Form onSubmit={handleSubmit}>
+                <Form onSubmit={handleSubmit} encType="multipart/form-data">
                     <InputTitle
                         type="text"
                         show={isOpen}
@@ -89,6 +112,7 @@ export default function AdminModal(props) {
                             displayH={display}
                             ref={inputFileRef}
                             onChange={handleChange}
+                            accept=".jpg"
                         />
                         {data.file
                             ? data.file.name
@@ -101,11 +125,13 @@ export default function AdminModal(props) {
                         placeholder="Precio"
                         ref={inputPriceRef}
                         onChange={handleChange}
+                        required
                     />
                     <InputButton
                         type="submit"
                         show={isOpen}
                         displayH={display}
+                        onChange={handleChange}
                         value="Subir"
                     />
                 </Form>

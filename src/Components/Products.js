@@ -1,8 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
+import getPosts from "../Services/getPosts";
 
 export default function Products(props) {
-    const [List, setList] = useState(<div>Loading</div>);
+    const [posts, setPosts] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [imgBlob, setBlob] = useState([]);
     const productRef = useRef();
     const hardcoded = [
         {
@@ -23,44 +26,62 @@ export default function Products(props) {
             src: "https://storage.googleapis.com/image-products/marquise.jpg",
             price: "1010",
         },
-        {
-            title: "Lemon Pie",
-            description: "Un rico lemon pie con lemon y es pie",
-            src: "https://storage.googleapis.com/image-products/lemonPie.jpg",
-            price: "1000",
-        },
-        {
-            title: "Cheesecake de maracuya",
-            description: "Una rica torta de queso de maracuia",
-            src: "https://storage.googleapis.com/image-products/cheesecake.jpg",
-            price: "1001",
-        },
-        {
-            title: "Marquise",
-            description: "Una rica marquise",
-            src: "https://storage.googleapis.com/image-products/marquise.jpg",
-            price: "1010",
-        },
     ];
+    useEffect(() => {
+        setPostsFromAPI();
+    }, []);
 
     useEffect(() => {
         props.sendRef({ products: productRef }); // eslint-disable-next-line
     }, []);
 
-    function setProducts() {
-        setList(
-            <>
-                {hardcoded.map((item, index) => {
-                    return <ItemList key={index} item={item}></ItemList>;
-                })}
-            </>
+    async function upadteEncoding(file) {
+        const base64String = btoa(
+            new Uint8Array(file.data.data).reduce(function (data, byte) {
+                return data + String.fromCharCode(byte);
+            }, "")
         );
+
+        const base64Response = await fetch(
+            `data:${file.contentType};base64,${base64String}`
+        );
+        const blob = await base64Response.blob();
+        let urlImg = URL.createObjectURL(blob);
+
+        setBlob((imgBlob) => [...imgBlob, urlImg]);
+    }
+
+    async function setPostsFromAPI() {
+        getPosts()
+            .then((response) => {
+                setPosts(response);
+            })
+            .catch((error) => console.log(error));
     }
     useEffect(() => {
-        setProducts(); // eslint-disable-next-line
-    }, []);
+        if (posts[0]) {
+            setIsLoading(false);
+            posts.forEach((item) => upadteEncoding(item.file));
+        }
+    }, [posts]);
 
-    return <ProductsDiv ref={productRef}>{List}</ProductsDiv>;
+    return (
+        <ProductsDiv ref={productRef}>
+            {isLoading ? (
+                <button>Loading</button>
+            ) : (
+                posts.map((item, index) => {
+                    return (
+                        <ItemList
+                            key={index}
+                            item={item}
+                            imgBlob={imgBlob[index]}
+                        ></ItemList>
+                    );
+                })
+            )}
+        </ProductsDiv>
+    );
 }
 
 function ItemList(props) {
@@ -74,8 +95,8 @@ function ItemList(props) {
         observer.observe(domRef.current);
     }, []);
     return (
-        <ItemListDiv change={isVisible} ref={domRef}>
-            <ProductImg src={item.src} alt={item.description} />
+        <ItemListDiv change={isVisible} ref={domRef} id={item._id}>
+            <ProductImg src={props.imgBlob} alt={item.description} />
             <ProductInfoDiv>
                 <ProductTitle>{item.title}</ProductTitle>
                 <ProductPrice>$ {item.price}</ProductPrice>

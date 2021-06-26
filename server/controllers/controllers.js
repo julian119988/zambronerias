@@ -1,5 +1,6 @@
 const { Storage } = require("@google-cloud/storage");
 const storage = new Storage();
+const PostModel = require("../models/post");
 
 const controllers = {
     home: function home(req, res) {
@@ -9,7 +10,7 @@ const controllers = {
         const response = await storage.bucket("image-products").getFiles();
         res.send({ message: response });
     },
-    getFile: function getFile(req, res, next) {
+    uploadPost: async function uploadPost(req, res, next) {
         const {
             file,
             body: { title, description, price },
@@ -19,16 +20,48 @@ const controllers = {
             file.mimetype == "image/jpg" ||
             file.mimetype == "image/jpeg"
         ) {
-            res.status(200).send({
-                //Seguir aca agregar db y hacer request correspondientes (CRUD)
-                message: "Mensaje recibido exitosamente!",
-                data: [title, description, price, file],
+            let postToUpload = new PostModel({
+                title: title,
+                description: description,
+                file: {
+                    data: file.buffer,
+                    contentType: file.mimetype,
+                },
+                price: price,
             });
+            try {
+                const postSaved = await postToUpload.save();
+                res.status(200).send({
+                    message: "Post guardado exitosamente!",
+                    data: postSaved,
+                });
+            } catch (error) {
+                console.log(error);
+                res.status(400).send({
+                    message: "Error inesperado!",
+                    error: error,
+                });
+            }
         } else {
             next(new Error("Invalid file type."));
             res.status(400).send({
                 message: "Invalid file type",
             });
+        }
+    },
+    getPosts: async function getPosts(req, res, next) {
+        try {
+            const allPosts = await PostModel.find();
+            res.send({
+                message: "Todos los posts han sido enviados!",
+                data: allPosts,
+            });
+        } catch (error) {
+            res.status(400).send({
+                message: "Error inesperado!",
+                error: error,
+            });
+            next(error);
         }
     },
 };

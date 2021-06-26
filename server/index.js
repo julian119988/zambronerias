@@ -5,6 +5,7 @@ const PORT = process.env.PORT || 8080;
 const routes = require("./routes/routes");
 const { notFind, handleError } = require("./middlewares/middlewares");
 const cors = require("cors");
+const db = require("./services/db");
 
 app.use(
     cors({

@@ -35,9 +35,7 @@ export default function AdminModal(props) {
         if (!data.file) {
             alert("Debe subir una imagen.");
         } else {
-            console.log(data); //Subir la imagen A googleCloud y los datos a la Base de datos.
             sendFile(data.file);
-            console.log(process.env, process.env.REACT_APP_API_URL);
             event.target.reset();
             toggleModal();
             setData({});
@@ -49,20 +47,22 @@ export default function AdminModal(props) {
         formData.append("description", data.description);
         formData.append("price", data.price);
         formData.append("file", data.file);
-        const response = await axios.post(
-            "http://localhost:8080/send",
-            formData,
-            {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            }
-        );
-        console.log(response);
+        try {
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_UPLOAD}`,
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            );
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     function handleChange() {
-        console.log(inputFileRef.current.files);
         setData({
             title: inputTitleRef.current.value,
             description: inputDescriptionRef.current.value,

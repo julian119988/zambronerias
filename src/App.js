@@ -4,13 +4,14 @@ import Description from "./Components/Description";
 import Footer from "./Components/Footer";
 import Products from "./Components/Products";
 import Navbar from "./Components/Navbar";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AdminModal from "./Components/AdminModal";
 
 function App() {
     const [refs, setRefs] = useState({});
     const [navBarState, setNavBarState] = useState(false);
     const [openAdminModal, setOpenAdminModal] = useState(false);
+    const [render, setRerender] = useState(false);
 
     function getRef(ref) {
         if (ref.description) {

@@ -1,32 +1,15 @@
-import { Suspense, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import getPosts from "../Services/getPosts";
+import { base64StringToBlob } from "blob-util";
+import Loader from "react-loader-spinner";
 
 export default function Products(props) {
     const [posts, setPosts] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [imgBlob, setBlob] = useState([]);
     const productRef = useRef();
-    const hardcoded = [
-        {
-            title: "Lemon Pie",
-            description: "Un rico lemon pie con lemon y es pie",
-            src: "https://storage.googleapis.com/image-products/lemonPie.jpg",
-            price: "1000",
-        },
-        {
-            title: "Cheesecake de maracuya",
-            description: "Una rica torta de queso de maracuia",
-            src: "https://storage.googleapis.com/image-products/cheesecake.jpg",
-            price: "1001",
-        },
-        {
-            title: "Marquise",
-            description: "Una rica marquise",
-            src: "https://storage.googleapis.com/image-products/marquise.jpg",
-            price: "1010",
-        },
-    ];
+
     useEffect(() => {
         setPostsFromAPI();
     }, []);
@@ -35,20 +18,26 @@ export default function Products(props) {
         props.sendRef({ products: productRef }); // eslint-disable-next-line
     }, []);
 
-    async function upadteEncoding(file) {
-        const base64String = btoa(
-            new Uint8Array(file.data.data).reduce(function (data, byte) {
-                return data + String.fromCharCode(byte);
-            }, "")
-        );
-
-        const base64Response = await fetch(
-            `data:${file.contentType};base64,${base64String}`
-        );
-        const blob = await base64Response.blob();
-        let urlImg = URL.createObjectURL(blob);
-
-        setBlob((imgBlob) => [...imgBlob, urlImg]);
+    function upadteEncoding() {
+        let tempList = [];
+        posts.forEach(async (item, index) => {
+            const base64String = btoa(
+                new Uint8Array(item.file.data.data).reduce(function (
+                    data,
+                    byte
+                ) {
+                    return data + String.fromCharCode(byte);
+                },
+                "")
+            );
+            const blob = base64StringToBlob(
+                base64String,
+                item.file.contentType
+            );
+            let urlImg = URL.createObjectURL(blob);
+            tempList[index] = urlImg;
+        });
+        setBlob(tempList);
     }
 
     async function setPostsFromAPI() {
@@ -60,15 +49,27 @@ export default function Products(props) {
     }
     useEffect(() => {
         if (posts[0]) {
-            setIsLoading(false);
-            posts.forEach((item) => upadteEncoding(item.file));
+            upadteEncoding();
         }
     }, [posts]);
+
+    useEffect(() => {
+        if (imgBlob.length === posts.length && imgBlob.length != 0) {
+            setIsLoading(false);
+        }
+    }, [JSON.stringify(imgBlob)]);
 
     return (
         <ProductsDiv ref={productRef}>
             {isLoading ? (
-                <button>Loading</button>
+                <Center>
+                    <Loader
+                        type="Circles"
+                        color="#00BFFF"
+                        height={80}
+                        width={80}
+                    />
+                </Center>
             ) : (
                 posts.map((item, index) => {
                     return (
@@ -104,6 +105,13 @@ function ItemList(props) {
         </ItemListDiv>
     );
 }
+const Center = styled.div`
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    width: 100%;
+    height: 30vh;
+`;
 const ProductInfoDiv = styled.div`
     display: flex;
     flex-direction: row;

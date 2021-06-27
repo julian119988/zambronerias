@@ -57,6 +57,7 @@ export default function AdminModal(props) {
                     },
                 }
             );
+            alert(response.data.message);
         } catch (error) {
             console.error(error);
         }

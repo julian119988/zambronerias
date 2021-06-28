@@ -11,6 +11,7 @@ export default function Products(props) {
     const productRef = useRef();
 
     useEffect(() => {
+        setIsLoading(true);
         setPostsFromAPI();
     }, []);
 
@@ -48,8 +49,10 @@ export default function Products(props) {
             .catch((error) => console.log(error));
     }
     useEffect(() => {
-        if (posts[0]) {
-            upadteEncoding();
+        if (posts) {
+            if (posts[0]) {
+                upadteEncoding();
+            }
         }
     }, [posts]);
 

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
-import uploadImage from "../Services/uploadImage";
+import uploadPost from "../Services/uploadPost";
 import axios from "axios";
 
 export default function AdminModal(props) {
@@ -35,31 +35,10 @@ export default function AdminModal(props) {
         if (!data.file) {
             alert("Debe subir una imagen.");
         } else {
-            sendFile(data.file);
+            uploadPost(data);
             event.target.reset();
             toggleModal();
             setData({});
-        }
-    }
-    async function sendFile() {
-        const formData = new FormData();
-        formData.append("title", data.title);
-        formData.append("description", data.description);
-        formData.append("price", data.price);
-        formData.append("file", data.file);
-        try {
-            const response = await axios.post(
-                `${process.env.REACT_APP_API_UPLOAD}`,
-                formData,
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                }
-            );
-            alert(response.data.message);
-        } catch (error) {
-            console.error(error);
         }
     }
 

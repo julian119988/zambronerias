@@ -17,6 +17,7 @@ export default async function uploadPost(data) {
             }
         );
         alert(response.data.message);
+        window.location.reload();
     } catch (error) {
         console.error(error);
     }

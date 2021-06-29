@@ -64,6 +64,18 @@ const controllers = {
             next(error);
         }
     },
+    removePost: async function removePost(req, res, next) {
+        const { id } = req.body;
+        try {
+            const removedPost = await PostModel.deleteOne({ _id: id });
+            res.send({ message: `Post with id ${id} removed succesfully!` });
+        } catch (error) {
+            res.status(400).send({
+                message: "Ups! Something unespected happened.",
+            });
+            next(error);
+        }
+    },
 };
 
 module.exports = controllers;

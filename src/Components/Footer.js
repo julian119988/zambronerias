@@ -7,7 +7,7 @@ export default function Footer(props) {
         <FooterDiv>
             <button
                 onClick={() => {
-                    props.adminModal(a);
+                    props.adminModal();
                     setA(!a);
                 }}
             >

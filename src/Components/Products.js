@@ -1,23 +1,31 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import getPosts from "../Services/getPosts";
 import { base64StringToBlob } from "blob-util";
 import Loader from "react-loader-spinner";
+import AdminContext from "../Services/AdminContext";
+import add from "../assets/images/add.png";
+import remove from "../assets/images/remove.png";
+import removePost from "../Services/removePost";
 
 export default function Products(props) {
     const [posts, setPosts] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [imgBlob, setBlob] = useState([]);
     const productRef = useRef();
+    const adminContext = useContext(AdminContext);
 
     useEffect(() => {
-        setIsLoading(true);
-        setPostsFromAPI();
+        initializeProducts();
     }, []);
 
     useEffect(() => {
         props.sendRef({ products: productRef }); // eslint-disable-next-line
     }, []);
+    function initializeProducts() {
+        setIsLoading(true);
+        setPostsFromAPI();
+    }
 
     function upadteEncoding() {
         let tempList = [];
@@ -57,7 +65,7 @@ export default function Products(props) {
     }, [posts]);
 
     useEffect(() => {
-        if (imgBlob.length === posts.length && imgBlob.length != 0) {
+        if (imgBlob.length === posts.length && imgBlob.length !== 0) {
             setIsLoading(false);
         }
     }, [JSON.stringify(imgBlob)]);
@@ -73,14 +81,42 @@ export default function Products(props) {
                         width={80}
                     />
                 </Center>
+            ) : posts[0] === undefined ? (
+                adminContext && (
+                    <ItemList
+                        index={"8989"}
+                        item={{
+                            title: "Agregar un post",
+                            description: "",
+                            price: "$$$",
+                        }}
+                        imgBlob={add}
+                        addPost={props.adminModal}
+                    ></ItemList>
+                )
             ) : (
                 posts.map((item, index) => {
                     return (
-                        <ItemList
-                            key={index}
-                            item={item}
-                            imgBlob={imgBlob[index]}
-                        ></ItemList>
+                        <>
+                            <ItemList
+                                restart={initializeProducts}
+                                index={index}
+                                item={item}
+                                imgBlob={imgBlob[index]}
+                            ></ItemList>
+                            {adminContext && index + 1 === posts.length && (
+                                <ItemList
+                                    index={"8989"}
+                                    item={{
+                                        title: "Agregar un post",
+                                        description: "",
+                                        price: "$$$",
+                                    }}
+                                    imgBlob={add}
+                                    addPost={props.adminModal}
+                                ></ItemList>
+                            )}
+                        </>
                     );
                 })
             )}
@@ -89,25 +125,67 @@ export default function Products(props) {
 }
 
 function ItemList(props) {
-    const { item } = props;
+    const { item, addPost, index } = props;
     const [isVisible, setVisible] = useState(false);
     const domRef = useRef();
+    const removeRef = useRef();
+    const adminContext = useContext(AdminContext);
     useEffect(() => {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => setVisible(entry.isIntersecting));
         });
         observer.observe(domRef.current);
+        return () => {
+            observer.disconnect();
+        };
     }, []);
+    function handleClick(e) {
+        if (addPost === undefined) {
+            if (e.target !== removeRef.current) {
+                console.log("Agregar mas info del post: " + item._id); //Agregar mas info del post
+            }
+        } else {
+            addPost();
+        }
+    }
+    async function removeItem(e, id) {
+        if (e.target === e.currentTarget) {
+            await removePost(id);
+            props.restart();
+        }
+    }
     return (
-        <ItemListDiv change={isVisible} ref={domRef} id={item._id}>
+        <ItemListDiv
+            key={index}
+            change={isVisible}
+            ref={domRef}
+            id={item._id}
+            onClick={handleClick}
+        >
             <ProductImg src={props.imgBlob} alt={item.description} />
             <ProductInfoDiv>
                 <ProductTitle>{item.title}</ProductTitle>
                 <ProductPrice>$ {item.price}</ProductPrice>
             </ProductInfoDiv>
+            {adminContext && addPost === undefined && (
+                <RemoveImg
+                    ref={removeRef}
+                    src={remove}
+                    alt="remove icon"
+                    onClick={(e) => removeItem(e, item._id)}
+                />
+            )}
         </ItemListDiv>
     );
 }
+
+const RemoveImg = styled.img`
+    position: absolute;
+    width: 10vh;
+    height: 10vh;
+    top: 5vh;
+    right: 5vh;
+`;
 const Center = styled.div`
     display: flex;
     justify-content: center;
@@ -145,12 +223,13 @@ const ItemListDiv = styled.div`
     justify-content: center;
     align-items: center;
     padding: 3vh;
-    border: 1px solid gray;
+    box-shadow: 0px 2px 23px 5px rgba(0, 0, 0, 0.52);
     border-radius: 10%;
     max-width: 400px;
     margin-left: auto;
     margin-right: auto;
     cursor: pointer;
+    position: relative;
     ${(props) =>
         props.change
             ? "opacity: 1; transform: none; visibility: visible;"

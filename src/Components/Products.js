@@ -7,6 +7,8 @@ import AdminContext from "../Services/AdminContext";
 import add from "../assets/images/add.png";
 import remove from "../assets/images/remove.png";
 import removePost from "../Services/removePost";
+import AdminModalUpdate from "./AdminModalUpdate";
+import ProductDetailModal from "./ProductDetailModal";
 
 export default function Products(props) {
     const [posts, setPosts] = useState([]);
@@ -127,9 +129,19 @@ export default function Products(props) {
 function ItemList(props) {
     const { item, addPost, index } = props;
     const [isVisible, setVisible] = useState(false);
+    const [openAdminUpdateModal, setAdminUpdateModal] = useState(false);
+    const [openProductDetailModal, setProductDetailModal] = useState(false);
+    const data = {
+        title: item.title,
+        description: item.description,
+        _id: item._id,
+        price: item.price,
+        file: props.imgBlob,
+    };
     const domRef = useRef();
     const removeRef = useRef();
     const adminContext = useContext(AdminContext);
+
     useEffect(() => {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => setVisible(entry.isIntersecting));
@@ -139,10 +151,20 @@ function ItemList(props) {
             observer.disconnect();
         };
     }, []);
+    function toggleAdminUpdateModal() {
+        setAdminUpdateModal(!openAdminUpdateModal);
+    }
+    function toggleProductDetailModal() {
+        setProductDetailModal(!openProductDetailModal);
+    }
     function handleClick(e) {
         if (addPost === undefined) {
             if (e.target !== removeRef.current) {
-                console.log("Agregar mas info del post: " + item._id); //Agregar mas info del post
+                if (adminContext) {
+                    toggleAdminUpdateModal();
+                } else {
+                    toggleProductDetailModal();
+                }
             }
         } else {
             addPost();
@@ -155,27 +177,34 @@ function ItemList(props) {
         }
     }
     return (
-        <ItemListDiv
-            key={index}
-            change={isVisible}
-            ref={domRef}
-            id={item._id}
-            onClick={handleClick}
-        >
-            <ProductImg src={props.imgBlob} alt={item.description} />
-            <ProductInfoDiv>
-                <ProductTitle>{item.title}</ProductTitle>
-                <ProductPrice>$ {item.price}</ProductPrice>
-            </ProductInfoDiv>
-            {adminContext && addPost === undefined && (
-                <RemoveImg
-                    ref={removeRef}
-                    src={remove}
-                    alt="remove icon"
-                    onClick={(e) => removeItem(e, item._id)}
-                />
-            )}
-        </ItemListDiv>
+        <>
+            <ItemListDiv
+                key={index}
+                change={isVisible}
+                ref={domRef}
+                id={item._id}
+                onClick={handleClick}
+            >
+                <ProductImg src={props.imgBlob} alt={item.description} />
+                <ProductInfoDiv>
+                    <ProductTitle>{item.title}</ProductTitle>
+                    <ProductPrice>$ {item.price}</ProductPrice>
+                </ProductInfoDiv>
+                {adminContext && addPost === undefined && (
+                    <RemoveImg
+                        ref={removeRef}
+                        src={remove}
+                        alt="remove icon"
+                        onClick={(e) => removeItem(e, item._id)}
+                    />
+                )}
+            </ItemListDiv>
+            <AdminModalUpdate data={data} openModal={openAdminUpdateModal} />
+            <ProductDetailModal
+                data={data}
+                openModal={openProductDetailModal}
+            />
+        </>
     );
 }
 
@@ -225,7 +254,7 @@ const ItemListDiv = styled.div`
     padding: 3vh;
     box-shadow: 0px 2px 23px 5px rgba(0, 0, 0, 0.52);
     border-radius: 10%;
-    max-width: 400px;
+    max-width: 300px;
     margin-left: auto;
     margin-right: auto;
     cursor: pointer;

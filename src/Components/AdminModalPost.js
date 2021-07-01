@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 import uploadPost from "../Services/uploadPost";
-import axios from "axios";
 
-export default function AdminModal(props) {
+export default function AdminModalPost(props) {
     const [isOpen, setIsOpen] = useState(false);
     const [display, setDisplay] = useState(false);
     const [firstRender, setFirstRender] = useState(true);
@@ -35,6 +34,7 @@ export default function AdminModal(props) {
         if (!data.file) {
             alert("Debe subir una imagen.");
         } else {
+            console.log(data);
             uploadPost(data);
             event.target.reset();
             toggleModal();
@@ -62,7 +62,9 @@ export default function AdminModal(props) {
     return (
         <Main show={isOpen} displayH={display} onClick={toggleModal} id="F">
             <Card show={isOpen} displayH={display}>
-                <Title>Nuevo post</Title>
+                <Title show={isOpen} displayH={display}>
+                    Nuevo post
+                </Title>
                 <Form onSubmit={handleSubmit} encType="multipart/form-data">
                     <InputTitle
                         type="text"
@@ -127,6 +129,7 @@ const Main = styled.div`
     height: 88vh;
     background-color: black;
     top: 12vh;
+    left: 0;
     transition: all 0.5s linear;
     will-change: display, background-color;
     justify-content: center;
@@ -141,6 +144,10 @@ const Main = styled.div`
 const Title = styled.h2`
     margin: 0;
     padding: 0;
+    font-size: 2em;
+    font-family: "Newsreader", sans-serif;
+    transition: all 0.5s linear;
+    will-change: display, opacity;
 `;
 const Card = styled.div`
     height: 70%;
@@ -171,6 +178,8 @@ const Form = styled.form`
 const InputStyles = css`
     z-index: 6;
     transition: all 0.5s linear;
+    font-family: "Newsreader", sans-serif;
+    font-size: 1.2em;
     will-change: display, background-color;
     ${(props) => (props.displayH ? "display: flex;" : "display: none;")}
     ${(props) => (props.show ? "opacity: 1;" : "opacity: 0;")};

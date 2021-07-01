@@ -76,6 +76,35 @@ const controllers = {
             next(error);
         }
     },
+    editPost: async function editPost(req, res, next) {
+        const { id, title, description, price } = req.body;
+        console.log(id, title, description, price, req.body);
+        if (!title || !description || !price) {
+            res.status(400).send({
+                message: "Ups! Something unespected happened.",
+            });
+        }
+        try {
+            const updatedPost = await PostModel.findByIdAndUpdate(
+                { _id: id },
+                {
+                    title: title,
+                    description: description,
+                    price: price,
+                }
+            );
+            res.send({
+                message: `Post with id: ${id} updated succesfully!`,
+                data: updatedPost,
+            });
+        } catch (error) {
+            console.error(error);
+            res.status(400).send({
+                message: "Ups! Something unespected happened.",
+            });
+            next(error);
+        }
+    },
 };
 
 module.exports = controllers;

@@ -5,7 +5,7 @@ import Footer from "./Components/Footer";
 import Products from "./Components/Products";
 import Navbar from "./Components/Navbar";
 import { useState, createContext, useEffect, useContext } from "react";
-import AdminModal from "./Components/AdminModal";
+import AdminModalPost from "./Components/AdminModalPost";
 import AdminAuth from "./Components/AdminAuth";
 import bcrypt from "bcryptjs";
 import AdminContext from "./Services/AdminContext";
@@ -15,7 +15,6 @@ function App() {
     const [navBarState, setNavBarState] = useState(false);
     const [openAdminModal, setOpenAdminModal] = useState(false);
     const [adminInput, setAdminInput] = useState(false);
-    const [render, setRerender] = useState(false);
     const [admin, setAdmin] = useState(false);
     const value = useContext(AdminContext);
 
@@ -83,7 +82,7 @@ function App() {
         <AdminContext.Provider value={admin}>
             <Main>
                 <Navbar refs={refs} navBarState={navBarState} />
-                <AdminModal openModal={openAdminModal} />
+                <AdminModalPost openModal={openAdminModal} />
                 <AdminAuth
                     openAdminInput={adminInput}
                     toggleAdmin={toggleAdmin}

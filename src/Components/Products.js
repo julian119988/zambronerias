@@ -7,6 +7,7 @@ import AdminContext from "../Services/AdminContext";
 import add from "../assets/images/add.png";
 import remove from "../assets/images/remove.png";
 import removePost from "../Services/removePost";
+import edit from "../assets/images/edit.png";
 import AdminModalUpdate from "./AdminModalUpdate";
 import ProductDetailModal from "./ProductDetailModal";
 
@@ -140,6 +141,7 @@ function ItemList(props) {
     };
     const domRef = useRef();
     const removeRef = useRef();
+    const editRef = useRef();
     const adminContext = useContext(AdminContext);
 
     useEffect(() => {
@@ -159,12 +161,11 @@ function ItemList(props) {
     }
     function handleClick(e) {
         if (addPost === undefined) {
-            if (e.target !== removeRef.current) {
-                if (adminContext) {
-                    toggleAdminUpdateModal();
-                } else {
-                    toggleProductDetailModal();
-                }
+            if (
+                e.target !== removeRef.current &&
+                e.target !== editRef.current
+            ) {
+                toggleProductDetailModal();
             }
         } else {
             addPost();
@@ -174,6 +175,11 @@ function ItemList(props) {
         if (e.target === e.currentTarget) {
             await removePost(id);
             props.restart();
+        }
+    }
+    function editItem(e) {
+        if (e.target === e.currentTarget) {
+            toggleAdminUpdateModal();
         }
     }
     return (
@@ -191,12 +197,21 @@ function ItemList(props) {
                     <ProductPrice>$ {item.price}</ProductPrice>
                 </ProductInfoDiv>
                 {adminContext && addPost === undefined && (
-                    <RemoveImg
-                        ref={removeRef}
-                        src={remove}
-                        alt="remove icon"
-                        onClick={(e) => removeItem(e, item._id)}
-                    />
+                    <>
+                        <RemoveImg
+                            ref={removeRef}
+                            src={remove}
+                            alt="remove icon"
+                            onClick={(e) => removeItem(e, item._id)}
+                            right
+                        />
+                        <RemoveImg
+                            ref={editRef}
+                            src={edit}
+                            alt="edit icon"
+                            onClick={(e) => editItem(e, item._id)}
+                        />
+                    </>
                 )}
             </ItemListDiv>
             <AdminModalUpdate data={data} openModal={openAdminUpdateModal} />
@@ -213,6 +228,7 @@ const RemoveImg = styled.img`
     width: 10vh;
     height: 10vh;
     top: 5vh;
+    ${(props) => (props.right ? "right: 5vh;" : "left: 5vh;")}
     right: 5vh;
 `;
 const Center = styled.div`

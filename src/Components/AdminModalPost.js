@@ -87,6 +87,8 @@ export default function AdminModalPost(props) {
                     <DroppableZone
                         onClick={() => inputFileRef.current.click()}
                         ref={divDroppableRef}
+                        show={isOpen}
+                        displayH={display}
                     >
                         <InputImage
                             type="file"
@@ -148,6 +150,8 @@ const Title = styled.h2`
     font-family: "Newsreader", sans-serif;
     transition: all 0.5s linear;
     will-change: display, opacity;
+    ${(props) => (props.displayH ? "display: flex;" : "display: none;")}
+    ${(props) => (props.show ? "opacity: 1;" : "opacity: 0;")};
 `;
 const Card = styled.div`
     height: 70%;
@@ -214,4 +218,8 @@ const DroppableZone = styled.div`
     align-items: center;
     justify-content: center;
     color: gray;
+    transition: all 0.5s linear;
+    will-change: display, background-color;
+    ${(props) => (props.displayH ? "display: flex;" : "display: none;")}
+    ${(props) => (props.show ? "opacity: 1;" : "opacity: 0;")};
 `;

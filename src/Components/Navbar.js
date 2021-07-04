@@ -7,7 +7,7 @@ export default function Navbar(props) {
     function scrollTo(element) {
         element.scrollIntoView({
             behavior: "smooth",
-            block: "nearest",
+            block: "start",
         });
     }
     async function asd() {

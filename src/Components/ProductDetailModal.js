@@ -28,7 +28,6 @@ export default function ProductDetailModal(props) {
             setFirstRender(false);
         } else {
             toggleModal();
-            console.log([title, description, price, _id, file]);
         } // eslint-disable-next-line
     }, [props.openModal]);
 

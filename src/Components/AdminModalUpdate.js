@@ -95,7 +95,6 @@ export default function AdminModalUpdate(props) {
                             required
                         />
                     </Container>
-
                     <Container>
                         <Label show={isOpen} displayH={display}>
                             Precio

@@ -19,7 +19,7 @@ export default function Products(props) {
     const adminContext = useContext(AdminContext);
 
     useEffect(() => {
-        initializeProducts();
+        initializeProducts(); // eslint-disable-next-line
     }, []);
 
     useEffect(() => {
@@ -64,13 +64,13 @@ export default function Products(props) {
             if (posts[0]) {
                 upadteEncoding();
             }
-        }
+        } // eslint-disable-next-line
     }, [posts]);
 
     useEffect(() => {
         if (imgBlob.length === posts.length && imgBlob.length !== 0) {
             setIsLoading(false);
-        }
+        } // eslint-disable-next-line
     }, [JSON.stringify(imgBlob)]);
 
     return (
@@ -289,6 +289,8 @@ const ProductsDiv = styled.div`
     grid-gap: 20px;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     background-color: #f8f7fc;
+    justify-content: center;
+    scroll-margin-top: 12vh;
 `;
 const ProductImg = styled.img`
     width: 100%;

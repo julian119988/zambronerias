@@ -3,6 +3,13 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { createGlobalStyle } from "styled-components";
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Redirect,
+} from "react-router-dom";
+import Auth from "./Components/Auth";
 const GlobalStyle = createGlobalStyle`
   html,
   body,
@@ -20,7 +27,15 @@ const GlobalStyle = createGlobalStyle`
 ReactDOM.render(
     <React.StrictMode>
         <GlobalStyle whiteColor />
-        <App />
+        <Router>
+            <Switch>
+                <Route exact path="/" component={App} />
+                <Route exact path="/auth" component={Auth} />
+                <Route path="*">
+                    <Redirect to="/" />
+                </Route>
+            </Switch>
+        </Router>
     </React.StrictMode>,
     document.getElementById("root")
 );

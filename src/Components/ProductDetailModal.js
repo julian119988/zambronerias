@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 export default function ProductDetailModal(props) {
-    const { title, description, price, _id, file } = props.data;
+    const { title, description, price, file } = props.data;
     const [isOpen, setIsOpen] = useState(false);
     const [display, setDisplay] = useState(false);
     const [firstRender, setFirstRender] = useState(true);
@@ -78,7 +78,7 @@ const Main = styled.div`
 `;
 
 const Title = styled.h2`
-    margin: 0;
+    margin: 5vh 0 3vh 0;
     padding: 0;
     font-size: 2em;
     font-family: "Newsreader", sans-serif;
@@ -89,8 +89,9 @@ const Title = styled.h2`
     ${(props) => (props.show ? "opacity: 1;" : "opacity: 0;")};
 `;
 const Card = styled.div`
-    height: 85%;
-    width: 80%;
+    height: auto;
+    width: auto;
+    max-width: 90%;
     border-radius: 10vh;
     z-index: 6;
     transition: all 0.5s linear;
@@ -113,20 +114,25 @@ const Column = styled.div`
     flex-direction: column;
     transition: all 0.5s linear;
     will-change: display, opacity;
+    justify-content: center;
+    align-items: center;
     ${(props) => (props.displayH ? "display: flex;" : "display: none;")}
     ${(props) => (props.show ? "opacity: 1;" : "opacity: 0;")};
 `;
 const Image = styled.img`
     max-width: 500px;
+    width: 90%;
     aspect-ratio: 1 / 1;
     transition: all 0.5s linear;
     will-change: display, opacity;
+    border-radius: 10vh;
+    margin-bottom: 5vh;
     ${(props) => (props.displayH ? "display: flex;" : "display: none;")}
     ${(props) => (props.show ? "opacity: 1;" : "opacity: 0;")};
 `;
 
 const Description = styled.p`
-    margin: 0;
+    margin: 0 0 0 0;
     padding: 0;
     font-size: 1.2em;
     font-family: "Newsreader", sans-serif;
@@ -136,7 +142,7 @@ const Description = styled.p`
     ${(props) => (props.show ? "opacity: 1;" : "opacity: 0;")};
 `;
 const Price = styled.h3`
-    margin: 0;
+    margin: 2vh 0 3vh 0;
     padding: 0;
     font-size: 1.5em;
     font-family: "Newsreader", sans-serif;

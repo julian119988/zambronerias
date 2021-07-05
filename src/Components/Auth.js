@@ -1,12 +1,55 @@
 import { useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
+import { useHistory } from "react-router-dom";
 import bcrypt from "bcryptjs";
 
-export default function AdminAuth(props) {
+export default function Auth() {
+    const [toggleAdmin, setToggleAdmin] = useState(false);
+    const [admin, setAdmin] = useState(false);
+
+    useEffect(() => {
+        checkAdmin();
+    }, []);
+    function checkAdmin() {
+        const savedAdmin = localStorage.getItem("adminPass");
+        bcrypt.compare(
+            process.env.REACT_APP_ADMIN_PASS,
+            savedAdmin,
+            function (err, res) {
+                if (res === true) {
+                    setAdmin(true);
+                } else {
+                    setAdmin(false);
+                }
+            }
+        );
+    }
+    return (
+        <>
+            <AdminButton
+                onClick={() => {
+                    if (admin) {
+                        localStorage.removeItem("adminPass");
+                        setAdmin(false);
+                        alert("Admin logged out");
+                    } else {
+                        setToggleAdmin(!toggleAdmin);
+                    }
+                }}
+            >
+                {admin ? "Desloguear" : "Administrar"}
+            </AdminButton>
+            <AdminAuth openAdminInput={toggleAdmin} />
+        </>
+    );
+}
+
+function AdminAuth(props) {
     const [isOpen, setIsOpen] = useState(false);
     const [display, setDisplay] = useState(false);
     const [firstRender, setFirstRender] = useState(true);
     const inputRef = useRef();
+    const history = useHistory();
 
     function toggleModal(event) {
         if (event?.target.id === "F" || event?.target.id === undefined) {
@@ -34,11 +77,11 @@ export default function AdminAuth(props) {
     function handleSubmit(event) {
         event.preventDefault();
         if (inputRef.current.value === process.env.REACT_APP_ADMIN_PASS) {
-            props.toggleAdmin();
             let salt = bcrypt.genSaltSync(10);
             let hash = bcrypt.hashSync(inputRef.current.value, salt);
             localStorage.setItem("adminPass", hash);
             toggleModal();
+            history.replace("/");
         } else {
             alert("Wrong password!");
         }
@@ -71,10 +114,10 @@ const Main = styled.div`
     position: fixed;
     z-index: 5;
     width: 100%;
-    height: 88vh;
+    height: 100%;
     background-color: black;
     left: 0;
-    top: 12vh;
+    top: 0;
     transition: all 0.5s linear;
     will-change: display, background-color;
     justify-content: center;
@@ -145,4 +188,17 @@ const InputSubmit = styled.input`
     display: flex;
     align-items: center;
     justify-content: center;
+`;
+
+const AdminButton = styled.button`
+    background-color: red;
+    opacity: 0.7;
+    color: white;
+    width: 20vh;
+    height: 10vh;
+    border-radius: 5vh;
+    border: none;
+    position: relative;
+    top: calc(50vh - 5vh);
+    left: calc(50% - 10vh);
 `;

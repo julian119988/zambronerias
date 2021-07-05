@@ -4,9 +4,8 @@ import Description from "./Components/Description";
 import Footer from "./Components/Footer";
 import Products from "./Components/Products";
 import Navbar from "./Components/Navbar";
-import { useState, createContext, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import AdminModalPost from "./Components/AdminModalPost";
-import AdminAuth from "./Components/AdminAuth";
 import bcrypt from "bcryptjs";
 import AdminContext from "./Services/AdminContext";
 
@@ -14,9 +13,7 @@ function App() {
     const [refs, setRefs] = useState({});
     const [navBarState, setNavBarState] = useState(false);
     const [openAdminModal, setOpenAdminModal] = useState(false);
-    const [adminInput, setAdminInput] = useState(false);
     const [admin, setAdmin] = useState(false);
-    const value = useContext(AdminContext);
 
     function getRef(ref) {
         if (ref.description) {
@@ -55,42 +52,20 @@ function App() {
             }
         );
     }
-    function toggleAdminInput() {
-        if (admin) {
-            if (adminInput === false) {
-                localStorage.removeItem("adminPass");
-                alert("Logged out!");
-                checkAdmin();
-            }
-        } else {
-            setAdminInput(!adminInput);
-        }
-    }
+
     useEffect(() => {
         checkAdmin();
     }, []);
-
-    function toggleAdmin() {
-        if (value) {
-            setAdmin(false);
-        } else {
-            setAdmin(true);
-        }
-    }
 
     return (
         <AdminContext.Provider value={admin}>
             <Main>
                 <Navbar refs={refs} navBarState={navBarState} />
                 <AdminModalPost openModal={openAdminModal} />
-                <AdminAuth
-                    openAdminInput={adminInput}
-                    toggleAdmin={toggleAdmin}
-                />
                 <Hero changeNavbarColor={changeNavbarColor} />
                 <Description sendRef={getRef} />
                 <Products sendRef={getRef} adminModal={changeAdminModal} />
-                <Footer adminModal={toggleAdminInput} />
+                <Footer />
             </Main>
         </AdminContext.Provider>
     );

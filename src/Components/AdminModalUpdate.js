@@ -208,11 +208,6 @@ const InputDescription = styled.input`
     ${InputStyles}
 `;
 
-const InputImage = styled.input`
-    ${InputStyles}
-    display: none;
-`;
-
 const InputPrice = styled.input`
     ${InputStyles}
 `;

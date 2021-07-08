@@ -9,12 +9,20 @@ export default function ProductDetailModal(props) {
 
     function toggleModal(event) {
         if (event?.target.id === "F" || event?.target.id === undefined) {
+            const scrollY = document.body.style.top;
+            const numberScroll = `${window.scrollY}`;
             if (isOpen === false) {
+                document.body.style.position = "fixed";
+                document.body.style.top = `-${numberScroll}px`;
+                console.log(`-${numberScroll}px`);
                 setDisplay(true);
                 setTimeout(() => {
                     setIsOpen(true);
                 }, 100);
             } else {
+                document.body.style.position = "";
+                document.body.style.top = "";
+                window.scrollTo(0, parseInt(scrollY || "0") * -1);
                 setIsOpen(false);
                 setTimeout(() => {
                     setDisplay(false);
@@ -62,14 +70,15 @@ const Main = styled.div`
     position: fixed;
     z-index: 5;
     width: 100%;
-    height: 88vh;
+    height: 100vh;
     background-color: black;
-    top: 12vh;
+    top: 0;
     left: 0;
-    transition: all 0.5s linear;
+    transition: all 0.2s linear;
     will-change: display, background-color;
     justify-content: center;
     align-items: center;
+    z-index: 9999;
     ${(props) => (props.displayH ? "display: flex;" : "display: none;")}
     ${(props) =>
         props.show
@@ -83,7 +92,7 @@ const Title = styled.h2`
     font-size: 2em;
     font-family: "Newsreader", sans-serif;
     text-align: center;
-    transition: all 0.5s linear;
+    transition: all 0.2s linear;
     will-change: display, opacity;
     ${(props) => (props.displayH ? "display: flex;" : "display: none;")}
     ${(props) => (props.show ? "opacity: 1;" : "opacity: 0;")};
@@ -94,7 +103,7 @@ const Card = styled.div`
     max-width: 90%;
     border-radius: 10vh;
     z-index: 6;
-    transition: all 0.5s linear;
+    transition: all 0.2s linear;
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
@@ -112,7 +121,7 @@ const Card = styled.div`
 const Column = styled.div`
     display: flex;
     flex-direction: column;
-    transition: all 0.5s linear;
+    transition: all 0.2s linear;
     will-change: display, opacity;
     justify-content: center;
     align-items: center;
@@ -123,7 +132,7 @@ const Image = styled.img`
     max-width: 500px;
     width: 90%;
     aspect-ratio: 1 / 1;
-    transition: all 0.5s linear;
+    transition: all 0.2s linear;
     will-change: display, opacity;
     border-radius: 10vh;
     margin-bottom: 5vh;
@@ -136,7 +145,7 @@ const Description = styled.p`
     padding: 0;
     font-size: 1.2em;
     font-family: "Newsreader", sans-serif;
-    transition: all 0.5s linear;
+    transition: all 0.2s linear;
     will-change: display, opacity;
     ${(props) => (props.displayH ? "display: flex;" : "display: none;")}
     ${(props) => (props.show ? "opacity: 1;" : "opacity: 0;")};
@@ -146,7 +155,7 @@ const Price = styled.h3`
     padding: 0;
     font-size: 1.5em;
     font-family: "Newsreader", sans-serif;
-    transition: all 0.5s linear;
+    transition: all 0.2s linear;
     will-change: display, opacity;
     ${(props) => (props.displayH ? "display: flex;" : "display: none;")}
     ${(props) => (props.show ? "opacity: 1;" : "opacity: 0;")};

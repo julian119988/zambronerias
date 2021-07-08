@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import AdminModalPost from "./Components/AdminModalPost";
 import bcrypt from "bcryptjs";
 import AdminContext from "./Services/AdminContext";
+import ContactMe from "./Components/ContactMe";
 
 function App() {
     const [refs, setRefs] = useState({});
@@ -26,6 +27,12 @@ function App() {
             setRefs(() => {
                 let temp = refs;
                 temp.products = ref.products;
+                return temp;
+            });
+        } else {
+            setRefs(() => {
+                let temp = refs;
+                temp.contact = ref.contact;
                 return temp;
             });
         }
@@ -65,6 +72,7 @@ function App() {
                 <Hero changeNavbarColor={changeNavbarColor} />
                 <Description sendRef={getRef} />
                 <Products sendRef={getRef} adminModal={changeAdminModal} />
+                <ContactMe sendRef={getRef} />
                 <Footer />
             </Main>
         </AdminContext.Provider>
@@ -76,5 +84,6 @@ const Main = styled.div`
     flex-direction: column;
     justify-content: center;
     min-height: 100vh;
+    background-color: #f8f7fc;
 `;
 export default App;

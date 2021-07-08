@@ -257,7 +257,7 @@ const ProductPrice = styled.h4`
 
 const ItemListDiv = styled.div`
     opacity: 0;
-    transform: translateY(20vh);
+    transform: translateY(10vh);
     visibility: hidden;
     transition: opacity 600ms ease-out, transform 600ms ease-out,
         visibility 1200ms ease-out;
@@ -267,7 +267,7 @@ const ItemListDiv = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 3vh;
+    padding: 0 0 3vh 0;
     box-shadow: 0px 2px 23px 5px rgba(0, 0, 0, 0.52);
     border-radius: 10%;
     max-width: 300px;
@@ -284,7 +284,7 @@ const ItemListDiv = styled.div`
     }
 `;
 const ProductsDiv = styled.div`
-    padding: 20px;
+    padding: 20px 20px 5vh 20px;
     display: grid;
     grid-gap: 20px;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -295,6 +295,6 @@ const ProductsDiv = styled.div`
 const ProductImg = styled.img`
     width: 100%;
     aspect-ratio: 1 / 1;
-    border-radius: 10%;
+    border-radius: 3vh 3vh 0 0;
     object-fit: cover;
 `;

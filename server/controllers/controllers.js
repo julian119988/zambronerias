@@ -1,11 +1,9 @@
 const { Storage } = require("@google-cloud/storage");
 const storage = new Storage();
 const PostModel = require("../models/post");
+const nodemailer = require("nodemailer");
 
 const controllers = {
-    home: function home(req, res) {
-        res.send("Hola mundo esto es home");
-    },
     helloToServer: async function helloToServer(req, res) {
         const response = await storage.bucket("image-products").getFiles();
         res.send({ message: response });
@@ -78,7 +76,6 @@ const controllers = {
     },
     editPost: async function editPost(req, res, next) {
         const { id, title, description, price } = req.body;
-        console.log(id, title, description, price, req.body);
         if (!title || !description || !price) {
             res.status(400).send({
                 message: "Ups! Something unespected happened.",
@@ -105,6 +102,34 @@ const controllers = {
             next(error);
         }
     },
+    sendMail: (sendMail = async (req, res, next) => {
+        const { title, description, email } = req.body;
+        if (!title || !description || !email) {
+            res.status(400).send({ message: "Error faltan datos!" });
+        } else {
+            try {
+                const transporter = nodemailer.createTransport({
+                    host: "smtp.gmail.com",
+                    port: 587,
+                    auth: {
+                        user: process.env.EMAIL_USER,
+                        pass: process.env.EMAIL_PASS,
+                    },
+                });
+                const info = await transporter.sendMail({
+                    from: `"ZAMBRONERIAS" ${process.env.EMAIL_USER}`, // sender address
+                    to: "flor.zambroni43@gmail.com", // list of receivers
+                    subject: title, // Subject line
+                    text: `${description}. 
+Email enviado por: ${email}`, // plain text body
+                });
+                res.send({ message: info });
+            } catch (error) {
+                res.status(400).send({ message: "Ha ocurrido un error" });
+                next(error);
+            }
+        }
+    }),
 };
 
 module.exports = controllers;

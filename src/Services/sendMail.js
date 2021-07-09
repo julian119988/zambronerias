@@ -1,4 +1,5 @@
 import axios from "axios";
+
 export default async function sendMail(data) {
     try {
         const response = await axios.post(

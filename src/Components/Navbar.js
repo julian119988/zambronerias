@@ -229,6 +229,9 @@ const NavTitle = styled.h4`
     font-size: 2.5em;
     font-family: "Josefin Sans", sans-serif;
     font-weight: 600;
+    @media (min-width: 900px) {
+        font-size: 3em;
+    }
 `;
 
 const NavItem = styled.li`
@@ -236,8 +239,11 @@ const NavItem = styled.li`
     margin: 0;
     margin-left: 5px;
     margin-right: 5px;
-    font-size: 1.25em;
+    font-size: 1.5em;
     cursor: pointer;
     font-family: "Josefin Sans", sans-serif;
     font-weight: 600;
+    @media (min-width: 900px) {
+        font-size: 2em;
+    }
 `;

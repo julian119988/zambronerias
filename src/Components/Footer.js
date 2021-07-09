@@ -18,12 +18,7 @@ export default function Footer(props) {
             .focus();
     };
     const goToWhatsapp = () => {
-        window
-            .open(
-                "https://l.instagram.com/?u=https%3A%2F%2Fwa.link%2Fn1n30g&e=ATM8jI8WCGJKfLJvOb254fXDowQc4BU8FwYrlxEuqgbVlhcO90euVtryTBOqbLmgaK7Pl9B9OeKtbX2DD2pgwA&s=1",
-                "_blank"
-            )
-            .focus();
+        window.open("https://wa.link/n1n30g", "_blank").focus();
     };
 
     return (

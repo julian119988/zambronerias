@@ -286,11 +286,14 @@ const ItemListDiv = styled.div`
 const ProductsDiv = styled.div`
     padding: 20px 20px 5vh 20px;
     display: grid;
-    grid-gap: 20px;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: 5vh;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     background-color: #f8f7fc;
     justify-content: center;
     scroll-margin-top: 12vh;
+    @media (max-width: 1700px) {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
 `;
 const ProductImg = styled.img`
     width: 100%;

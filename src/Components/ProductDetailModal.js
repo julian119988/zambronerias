@@ -173,10 +173,13 @@ const Image = styled.img`
     border-radius: 10vh 10vh 0 0;
     ${(props) => (props.displayH ? "display: flex;" : "display: none;")}
     ${(props) => (props.show ? "opacity: 1;" : "opacity: 0;")};
-    @media (min-width: 1400px), (orientation: landscape) {
+    @media (orientation: landscape) {
         max-width: 70vh;
         aspect-ratio: 1 / 1;
         border-radius: 10vh 0 0 10vh;
+    }
+    @media (orientation: portrait) {
+        max-width: fit-content;
     }
 `;
 

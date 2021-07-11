@@ -109,8 +109,8 @@ export default function ContactMe(props) {
                                 ref={titleRef}
                             />
                         </Container>
-                        <Container>
-                            <Label empty={descriptionIsEmpty}>
+                        <Container des>
+                            <Label empty={descriptionIsEmpty} des>
                                 Descripcion
                             </Label>
                             <Description
@@ -173,10 +173,21 @@ const Label = styled.label`
     transition: all 200ms linear;
     width: fit-content;
     height: 3vh;
-    ${(props) =>
-        props.empty
-            ? "transform: translate(1vh, 4.15vh);color: gray; font-size: 1.5em;"
-            : null}
+    position: absolute;
+    @media (orientation: portrait) {
+        bottom: 0vh;
+        left: 1vh;
+        ${(props) => props.des && "bottom: 2vh;"}
+        ${(props) =>
+            props.empty ? "color: gray; font-size: 1.5em;" : "bottom: 50% ;"}
+    }
+    @media (orientation: landscape) {
+        bottom: 1vw;
+        left: 1vw;
+        ${(props) => props.des && "bottom: 3vw;"}
+        ${(props) =>
+            props.empty ? "color: gray; font-size: 1.5em;" : "bottom: 70%;"}
+    }
 `;
 const Container = styled.div`
     display: flex;
@@ -184,13 +195,23 @@ const Container = styled.div`
     flex-direction: column;
     margin: 1vh 0 1vh 0;
     position: relative;
+    padding-top: 50%;
+    @media (orientation: landscape) {
+        height: 8vw;
+        padding-top: 4vw;
+        ${(props) => props.des && "height: 12vw; padding-top: 6vw;"}
+    }
+    @media (orientation: portrait) {
+        height: 8vh;
+        padding-top: 4vh;
+        ${(props) => props.des && "height: 12vh; padding-top: 6vh;"}
+    }
 `;
 
 const Main = styled.div`
     position: relative;
     width: 100%;
     min-height: 40vh;
-    max-height: 70vh;
     background-color: #f8f7fc;
     transition: all 600ms ease-out;
     scroll-margin-top: 15vh;
@@ -216,13 +237,20 @@ const Form = styled.form`
 `;
 
 const InputStyles = css`
-    height: 4vh;
     width: 100%;
+    min-height: 30px;
+    height: 100%;
+    padding-left: 1vh;
+    @media (orientation: portrait) {
+        padding-left: 1vw;
+    }
 `;
 
 const Title = styled.input(InputStyles);
 
-const Email = styled.input(InputStyles);
+const Email = styled.input`
+    ${InputStyles};
+`;
 
 const SubmitButton = styled.input`
     margin: 1vh 1vh 1vh 0;
@@ -230,11 +258,15 @@ const SubmitButton = styled.input`
 
 const Description = styled.textarea`
     resize: none;
-    height: 15vh;
     max-height: auto;
     -ms-overflow-style: none;
     scrollbar-width: none;
-    max-height: 30vh;
+    padding: 1vh;
+    height: 6vh;
+    @media (orientation: landscape) {
+        height: 6vw;
+        padding: 1vw;
+    }
     &::-webkit-scrollbar {
         display: none;
     }
